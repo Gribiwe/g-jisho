@@ -12,6 +12,7 @@ import { LoginModalService, AccountService, Account } from 'app/core';
 export class HomeComponent implements OnInit {
     account: Account;
     modalRef: NgbModalRef;
+    isStart: String;
 
     constructor(
         private accountService: AccountService,
@@ -20,6 +21,7 @@ export class HomeComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.isStart = 'start';
         this.accountService.identity().then((account: Account) => {
             this.account = account;
         });
@@ -36,6 +38,38 @@ export class HomeComponent implements OnInit {
 
     isAuthenticated() {
         return this.accountService.isAuthenticated();
+    }
+
+    setHomeStart() {
+        this.isStart = 'start';
+    }
+
+    setYourDictionaries() {
+        this.isStart = 'yod';
+    }
+
+    setOtherDictionaries() {
+        this.isStart = 'othd';
+    }
+
+    setFindKanji() {
+        this.isStart = 'fkanji';
+    }
+
+    isHomeStart() {
+        return this.isStart === 'start';
+    }
+
+    isYourDictionaries() {
+        return this.isStart === 'yod';
+    }
+
+    isOtherDictionariest() {
+        return this.isStart === 'othd';
+    }
+
+    isFindKanji() {
+        return this.isStart === 'fkanji';
     }
 
     login() {

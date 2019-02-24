@@ -21,3 +21,48 @@ Main page styles
         background-size: contain;
     }
 }
+
+.function-button {
+    border-radius: 5px;
+    background-color: #ffffff;
+    max-width: 100px;
+    min-width: max-content;
+    margin: 10px;
+    padding: 5px;
+    border: 2px #dcaee8;
+    box-shadow: 0 0 2px rgba(134, 134, 134, 0.34);
+}
+
+.menu-triada {
+    font-size: 22px;
+    height: 200px;
+    width: 25%;
+    margin: auto;
+    border: 1px solid #343a40;
+
+    span {
+        position: relative;
+        top: 60px;
+    }
+}
+
+.menu-triada-slim {
+    font-size: 22px;
+    height: 50px;
+    width: 25%;
+    margin: auto;
+    border: 1px solid #343a40;
+
+    span {
+        position: relative;
+        top: 5px;
+    }
+}
+
+.menu-triada:hover,
+.menu-triada-slim:hover {
+    transition: all 0.1s linear;
+    font-size: 23px;
+
+    border: 2px solid #d6d5d8;
+}
