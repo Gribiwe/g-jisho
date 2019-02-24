@@ -1,0 +1,27 @@
+entity Dictionary {
+	name String
+}
+
+relationship ManyToOne {
+	Dictionary{creator} to User
+}
+
+entity KanjiRecord {
+	value String,
+    hiragana String,
+    katakana String,
+    meaning String,
+    note String
+}
+
+relationship ManyToOne {
+	KanjiRecord{creator} to User
+}
+
+relationship ManyToMany {
+	Dictionary to User
+}
+
+relationship ManyToMany {
+	KanjiRecord to Dictionary
+}
