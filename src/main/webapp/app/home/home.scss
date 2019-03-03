@@ -34,9 +34,9 @@ Main page styles
 }
 
 .menu-triada {
-    font-size: 22px;
+    font-size: 32px;
     height: 200px;
-    width: 25%;
+    width: 40%;
     margin: auto;
     border: 1px solid #343a40;
 
@@ -62,7 +62,5 @@ Main page styles
 .menu-triada:hover,
 .menu-triada-slim:hover {
     transition: all 0.1s linear;
-    font-size: 23px;
-
     border: 2px solid #d6d5d8;
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity KanjiRecord.
+    -->
+    <changeSet id="20190224102423-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="creator_id"
+                                 baseTableName="kanji_record"
+                                 constraintName="fk_kanji_record_creator_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="kanji_record_id"
+                                 baseTableName="kanji_record_dictionary"
+                                 constraintName="fk_kanji_record_dictionary_kanji_record_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="kanji_record"/>
+        <addForeignKeyConstraint baseColumnNames="dictionary_id"
+                                 baseTableName="kanji_record_dictionary"
+                                 constraintName="fk_kanji_record_dictionary_dictionary_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="dictionary"/>
+        
+    </changeSet>
+</databaseChangeLog>

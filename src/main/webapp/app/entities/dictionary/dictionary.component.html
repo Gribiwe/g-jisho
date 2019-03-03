@@ -1,0 +1,118 @@
+<div>
+    <h2 id="page-heading">
+        <span>Dictionaries</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-dictionary" [routerLink]="['/dictionary/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Dictionary
+            </span>
+        </button>
+        <button *ngIf="!showingOther" id="jh-show-other" class="btn btn-info float-right jh-create-entity create-dictionary" style="margin-right: 30px" (click)="loadAll()">
+            <fa-icon [icon]="'book'"></fa-icon>
+            <span >
+            Show other dictionaries
+            </span>
+        </button>
+        <button *ngIf="showingOther" id="jh-show-my" class="btn btn-info float-right jh-create-entity create-dictionary" style="margin-right: 30px" (click)="loadMy()">
+            <fa-icon [icon]="'arrow-left'"></fa-icon>
+            <span >
+            Back to my dictionaries
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="dictionaries && !showingOther">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Name</span></th>
+            <th><span>Creator</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dictionary of dictionaries ;trackBy: trackId">
+                <td><a [routerLink]="['/dictionary', dictionary.id, 'view' ]">{{dictionary.id}}</a></td>
+                <td>{{dictionary.name}}</td>
+                <td>
+                    {{dictionary.creator?.login}}
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/dictionary', dictionary.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                *ngIf="dictionary.creator.login===currentAccount.login"
+                                [routerLink]="['/dictionary', dictionary.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'dictionary', { outlets: { popup: dictionary.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-responsive" *ngIf="alldictionaries && showingOther">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th><span>ID</span></th>
+                <th><span>Name</span></th>
+                <th><span>Creator</span></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dictionary of alldictionaries ;trackBy: trackId">
+                <td><a [routerLink]="['/dictionary', dictionary.id, 'view' ]">{{dictionary.id}}</a></td>
+                <td>{{dictionary.name}}</td>
+                <td>
+                    {{dictionary.creator?.login}}
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/dictionary', dictionary.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                *ngIf="dictionary.creator.login===currentAccount.login"
+                                [routerLink]="['/dictionary', dictionary.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'dictionary', { outlets: { popup: dictionary.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

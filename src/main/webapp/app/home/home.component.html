@@ -31,23 +31,16 @@
         </div>
         <div [ngSwitch]="isAuthenticated()">
             <div *ngSwitchCase="true" style="display: flex">
-                <div class="menu-triada" (click)="setYourDictionaries()" *ngIf="isHomeStart()">
-                    <span>Your dictionaries</span>
-
+                <div routerLink="dictionary" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="menu-triada">
+                    <span>Dictionaries</span>
                 </div>
-                <div class="menu-triada" (click)="setOtherDictionaries()" *ngIf="isHomeStart()">
-                <span>Dictionaries of other people</span>
-
-                </div>
-                <div class="menu-triada" (click)="setFindKanji()" *ngIf="isHomeStart()">
+                <div class="menu-triada">
                 <span>Find Kanji</span>
 
                 </div>
-                <div class="menu-triada-slim" (click)="setHomeStart()" *ngIf="!isHomeStart()">
-                    <span>Cancel</span>
-
-                </div>
             </div>
+
+
 
             <div *ngSwitchCase="false">
                 <button type="button" class="btn btn-primary" (click)="login()">Sign in</button> or

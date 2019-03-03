@@ -1,0 +1,62 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-kanji-record-heading">Create or edit a Kanji Record</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!kanjiRecord.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="kanjiRecord.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_value">Value</label>
+                    <input type="text" class="form-control" name="value" id="field_value"
+                        [(ngModel)]="kanjiRecord.value" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_hiragana">Hiragana</label>
+                    <input type="text" class="form-control" name="hiragana" id="field_hiragana"
+                        [(ngModel)]="kanjiRecord.hiragana" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_katakana">Katakana</label>
+                    <input type="text" class="form-control" name="katakana" id="field_katakana"
+                        [(ngModel)]="kanjiRecord.katakana" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_meaning">Meaning</label>
+                    <input type="text" class="form-control" name="meaning" id="field_meaning"
+                        [(ngModel)]="kanjiRecord.meaning" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_note">Note</label>
+                    <input type="text" class="form-control" name="note" id="field_note"
+                        [(ngModel)]="kanjiRecord.note" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_creator">Creator</label>
+                    <select class="form-control" id="field_creator" name="creator" [(ngModel)]="kanjiRecord.creator" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="userOption.id === kanjiRecord.creator?.id ? kanjiRecord.creator : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="field_dictionary">Dictionary</label>
+                    <select class="form-control" id="field_dictionary" multiple name="dictionary" [(ngModel)]="kanjiRecord.dictionaries">
+                        <option [ngValue]="getSelected(kanjiRecord.dictionaries, dictionaryOption)" *ngFor="let dictionaryOption of dictionaries; trackBy: trackDictionaryById">{{dictionaryOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

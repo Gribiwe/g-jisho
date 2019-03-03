@@ -3,6 +3,10 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { LoginModalService, AccountService, Account } from 'app/core';
+import { DictionaryService } from 'app/entities/dictionary/dictionary.service.ts';
+import { filter, map } from 'rxjs/operators';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { IDictionary } from 'app/shared/model/dictionary.model';
 
 @Component({
     selector: 'jhi-home',
@@ -13,15 +17,18 @@ export class HomeComponent implements OnInit {
     account: Account;
     modalRef: NgbModalRef;
     isStart: String;
+    dictionaries: IDictionary[];
 
     constructor(
         private accountService: AccountService,
         private loginModalService: LoginModalService,
-        private eventManager: JhiEventManager
+        private eventManager: JhiEventManager,
+        private dictionaryService: DictionaryService
     ) {}
 
     ngOnInit() {
         this.isStart = 'start';
+
         this.accountService.identity().then((account: Account) => {
             this.account = account;
         });
@@ -74,5 +81,19 @@ export class HomeComponent implements OnInit {
 
     login() {
         this.modalRef = this.loginModalService.open();
+    }
+
+    getDictionaries() {
+        this.dictionaryService
+            .query()
+            .pipe(
+                filter((res: HttpResponse<IDictionary[]>) => res.ok),
+                map((res: HttpResponse<IDictionary[]>) => res.body)
+            )
+            .subscribe((res: IDictionary[]) => {
+                this.dictionaries = res;
+                console.log(this.dictionaries);
+                console.log(res);
+            });
     }
 }

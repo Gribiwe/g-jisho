@@ -1,0 +1,2 @@
+// JDL definition for application 'gjisho' generated with command 'jhipster export-jdl'
+

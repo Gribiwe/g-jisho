@@ -1,0 +1,72 @@
+<div>
+    <h2 id="page-heading">
+        <span>Kanji Records</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-kanji-record" [routerLink]="['/kanji-record/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Kanji Record
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="kanjiRecords">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Value</span></th>
+            <th><span>Hiragana</span></th>
+            <th><span>Katakana</span></th>
+            <th><span>Meaning</span></th>
+            <th><span>Note</span></th>
+            <th><span>Creator</span></th>
+            <th><span>Dictionary</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let kanjiRecord of kanjiRecords ;trackBy: trackId">
+                <td><a [routerLink]="['/kanji-record', kanjiRecord.id, 'view' ]">{{kanjiRecord.id}}</a></td>
+                <td>{{kanjiRecord.value}}</td>
+                <td>{{kanjiRecord.hiragana}}</td>
+                <td>{{kanjiRecord.katakana}}</td>
+                <td>{{kanjiRecord.meaning}}</td>
+                <td>{{kanjiRecord.note}}</td>
+                <td>
+                    {{kanjiRecord.creator?.id}}
+                </td>
+                <td>
+                    <span *ngFor="let dictionary of kanjiRecord.dictionaries; let last = last">
+                            <a class="form-control-static" [routerLink]="['../dictionary', dictionary?.id, 'view' ]">{{dictionary.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/kanji-record', kanjiRecord.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/kanji-record', kanjiRecord.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'kanji-record', { outlets: { popup: kanjiRecord.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
