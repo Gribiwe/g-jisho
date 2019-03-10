@@ -40,7 +40,6 @@ public class KanjiRecord implements Serializable {
     private String note;
 
     @ManyToOne
-    @JsonIgnoreProperties("kanjiRecords")
     private User creator;
 
     @ManyToMany

@@ -7,6 +7,7 @@ import jisho.security.SecurityUtils;
 import jisho.web.rest.errors.BadRequestAlertException;
 import jisho.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -92,7 +93,12 @@ public class DictionaryResource {
     @GetMapping("/dictionaries")
     public List<Dictionary> getAllDictionaries(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         log.debug("REST request to get all Dictionaries");
-        return dictionaryRepository.findAllWithEagerRelationships();
+        List<Dictionary> all = dictionaryRepository.findAll();
+        for (Dictionary dictionary : all) {
+            Hibernate.initialize(dictionary.getUsers());
+            Hibernate.initialize(dictionary.getKanjiRecords());
+        }
+        return all;
     }
 
     /**
@@ -105,13 +111,20 @@ public class DictionaryResource {
     public ResponseEntity<Dictionary> getDictionary(@PathVariable Long id) {
         log.debug("REST request to get Dictionary : {}", id);
         Optional<Dictionary> dictionary = dictionaryRepository.findOneWithEagerRelationships(id);
+        Hibernate.initialize(dictionary.get().getUsers());
+        Hibernate.initialize(dictionary.get().getKanjiRecords());
         return ResponseUtil.wrapOrNotFound(dictionary);
     }
 
     @GetMapping("/dictionaries/getMy")
     public List<Dictionary> getMyDictionaries(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         String currentUser = SecurityUtils.getCurrentUserLogin().get();
-        return dictionaryRepository.findAllCopiedByLogin(currentUser);
+        List<Dictionary> allCopiedByLogin = dictionaryRepository.findAllCopiedByLogin(currentUser);
+        for (Dictionary dictionary : allCopiedByLogin) {
+            Hibernate.initialize(dictionary.getUsers());
+            Hibernate.initialize(dictionary.getKanjiRecords());
+        }
+        return allCopiedByLogin;
     }
 
     /**

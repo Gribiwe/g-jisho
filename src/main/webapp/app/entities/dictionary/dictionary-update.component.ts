@@ -9,6 +9,7 @@ import { DictionaryService } from './dictionary.service';
 import { IUser, UserService } from 'app/core';
 import { IKanjiRecord } from 'app/shared/model/kanji-record.model';
 import { KanjiRecordService } from 'app/entities/kanji-record';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'jhi-dictionary-update',

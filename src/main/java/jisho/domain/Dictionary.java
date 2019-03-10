@@ -29,7 +29,6 @@ public class Dictionary implements Serializable {
     private String name;
 
     @ManyToOne
-    @JsonIgnoreProperties("dictionaries")
     private User creator;
 
 
@@ -40,7 +39,6 @@ public class Dictionary implements Serializable {
     private Set<User> users = new HashSet<>();
 
     @ManyToMany(mappedBy = "dictionaries")
-    @JsonIgnore
     private Set<KanjiRecord> kanjiRecords = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

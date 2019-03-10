@@ -27,14 +27,12 @@ export class DictionaryService {
         return this.http.get<IDictionary>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<EntityArrayResponseType> {
-        const options = createRequestOption(req);
-        return this.http.get<IDictionary[]>(this.resourceUrl, { params: options, observe: 'response' });
+    query(): Observable<EntityArrayResponseType> {
+        return this.http.get<IDictionary[]>(this.resourceUrl, { observe: 'response' });
     }
 
-    getMy(req?: any): Observable<EntityArrayResponseType> {
-        const options = createRequestOption(req);
-        return this.http.get<IDictionary[]>(`${this.resourceUrl}/getMy`, { params: options, observe: 'response' });
+    getMy(): Observable<EntityArrayResponseType> {
+        return this.http.get<IDictionary[]>(`${this.resourceUrl}/getMy`, { observe: 'response' });
     }
 
     delete(id: number): Observable<HttpResponse<any>> {

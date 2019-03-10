@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
@@ -60,7 +60,9 @@ export class DictionaryComponent implements OnInit, OnDestroy {
             )
             .subscribe(
                 (res: IDictionary[]) => {
+                    console.log(res);
                     this.dictionaries = res;
+                    console.log(this.dictionaries);
                 },
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
@@ -68,10 +70,15 @@ export class DictionaryComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.loadMy();
+        let load = this.loadMy;
         this.accountService.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInDictionaries();
+
+        this.eventManager.subscribe('dictionaryListModification', event => {
+            this.loadMy();
+        });
     }
 
     ngOnDestroy() {
@@ -84,6 +91,31 @@ export class DictionaryComponent implements OnInit, OnDestroy {
 
     registerChangeInDictionaries() {
         this.eventSubscriber = this.eventManager.subscribe('dictionaryListModification', response => this.loadAll());
+    }
+
+    copyDictionary(dictionary: IDictionary) {
+        dictionary.users.push(this.currentAccount);
+        if (dictionary.id !== undefined) {
+            this.subscribeToSaveResponse(this.dictionaryService.update(dictionary));
+        } else {
+            this.subscribeToSaveResponse(this.dictionaryService.create(dictionary));
+        }
+    }
+
+    protected subscribeToSaveResponse(result: Observable<HttpResponse<IDictionary>>) {
+        result.subscribe((res: HttpResponse<IDictionary>) => this.loadMy(), (res: HttpErrorResponse) => console.log(res));
+    }
+
+    dictionatyContaintsUser(dictionary: IDictionary) {
+        let res = false;
+        let currentAccount1 = this.currentAccount;
+        console.log(dictionary);
+        dictionary.users.forEach(function(user) {
+            if (user.id === currentAccount1.id) {
+                res = true;
+            }
+        });
+        return res;
     }
 
     protected onError(errorMessage: string) {

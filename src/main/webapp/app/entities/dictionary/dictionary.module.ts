@@ -8,11 +8,14 @@ import {
     DictionaryUpdateComponent,
     DictionaryDeletePopupComponent,
     DictionaryDeleteDialogComponent,
+    KanjiRecordDeleteDialogComponent,
+    KanjiRecordDeletePopupComponent,
     dictionaryRoute,
+    kanjiRecordPopupRoute,
     dictionaryPopupRoute
 } from './';
 
-const ENTITY_STATES = [...dictionaryRoute, ...dictionaryPopupRoute];
+const ENTITY_STATES = [...dictionaryRoute, ...dictionaryPopupRoute, ...kanjiRecordPopupRoute];
 
 @NgModule({
     imports: [GjishoSharedModule, RouterModule.forChild(ENTITY_STATES)],
@@ -21,9 +24,18 @@ const ENTITY_STATES = [...dictionaryRoute, ...dictionaryPopupRoute];
         DictionaryDetailComponent,
         DictionaryUpdateComponent,
         DictionaryDeleteDialogComponent,
-        DictionaryDeletePopupComponent
+        DictionaryDeletePopupComponent,
+        KanjiRecordDeleteDialogComponent,
+        KanjiRecordDeletePopupComponent
     ],
-    entryComponents: [DictionaryComponent, DictionaryUpdateComponent, DictionaryDeleteDialogComponent, DictionaryDeletePopupComponent],
+    entryComponents: [
+        DictionaryComponent,
+        DictionaryUpdateComponent,
+        DictionaryDeleteDialogComponent,
+        DictionaryDeletePopupComponent,
+        KanjiRecordDeleteDialogComponent,
+        KanjiRecordDeletePopupComponent
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GjishoDictionaryModule {}

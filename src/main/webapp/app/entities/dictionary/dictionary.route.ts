@@ -11,6 +11,8 @@ import { DictionaryDetailComponent } from './dictionary-detail.component';
 import { DictionaryUpdateComponent } from './dictionary-update.component';
 import { DictionaryDeletePopupComponent } from './dictionary-delete-dialog.component';
 import { IDictionary } from 'app/shared/model/dictionary.model';
+import { KanjiRecordDeletePopupComponent } from './kanji-record-delete-dialog.component';
+import { KanjiRecordResolve } from 'app/entities/kanji-record';
 
 @Injectable({ providedIn: 'root' })
 export class DictionaryResolve implements Resolve<IDictionary> {
@@ -86,6 +88,22 @@ export const dictionaryPopupRoute: Routes = [
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Dictionaries'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    }
+];
+
+export const kanjiRecordPopupRoute: Routes = [
+    {
+        path: ':dictionary/view/:id/delete-kanji',
+        component: KanjiRecordDeletePopupComponent,
+        resolve: {
+            kanjiRecord: KanjiRecordResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'KanjiRecords'
         },
         canActivate: [UserRouteAccessService],
         outlet: 'popup'

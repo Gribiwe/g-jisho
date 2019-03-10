@@ -1,37 +1,70 @@
-<div class="row justify-content-center">
-    <div class="col-8">
-        <div *ngIf="dictionary">
-            <h2><span>Dictionary</span> {{dictionary.id}}</h2>
-            <hr>
+<div>
+
+    <h2 id="page-heading">
+        <span>{{dictionary.name}}</span>
+        <a href="/#/kanji-record/new?dictionary={{dictionary.id}}" style="margin-left: 10px"
+           *ngIf="dictionary.creator.login===currentAccount.login"
+           class="btn btn-primary float-right jh-create-entity">
+            <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Add new kanji</span>
+        </a>
+        <button type="button" style="margin-left: 10px"
+                *ngIf="dictionary.creator.login===currentAccount.login"
+                [routerLink]="['/dictionary', dictionary.id, 'edit']"
+                class="btn float-right btn-primary">
+            <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Change Name</span>
+        </button>
+        <button id="jh-show-my" style="margin-left: 10px"
+                class="btn float-right btn-primary "
+                [routerLink]="['/dictionary']">
+            <fa-icon [icon]="'arrow-left'"></fa-icon>
+            <span>Back</span>
+        </button>
+    </h2>
+            <jhi-alert></jhi-alert>
+            <h2></h2>
+
             <jhi-alert-error></jhi-alert-error>
-            <dl class="row-md jh-entity-details">
-                <dt><span>Name</span></dt>
-                <dd>
-                    <span>{{dictionary.name}}</span>
-                </dd>
-                <dt><span>Creator</span></dt>
-                <dd>
-                    {{dictionary.creator?.id}}
-                </dd>
-                <dt><span>User</span></dt>
-                <dd>
-                    <span *ngFor="let user of dictionary.users; let last = last">
-                        {{user.id}}{{last ? '' : ', '}}
-                    </span>
-                </dd>
-            </dl>
+            <div class="table-responsive" style="margin-top: 20px">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th><span>Kanji</span></th>
+                        <th><span>Hiragana</span></th>
+                        <th><span>Katakana</span></th>
+                        <th><span>Meaning</span></th>
+                        <th><span>Note</span></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let kanji of dictionary.kanjiRecords">
+                        <td>{{kanji.value}}</td>
+                        <td>{{kanji.hiragana}}</td>
+                        <td>{{kanji.katakana}}</td>
+                        <td>{{kanji.meaning}}</td>
+                        <td>{{kanji.note}}</td>
 
-            <button type="submit"
-                    (click)="previousState()"
-                    class="btn btn-info">
-                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
-            </button>
-
-            <button type="button"
-                    [routerLink]="['/dictionary', dictionary.id, 'edit']"
-                    class="btn btn-primary">
-                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
-            </button>
-        </div>
-    </div>
+                        <td class="text-right">
+                            <div class="btn-group flex-btn-group-container">
+                                <button (click)="toKanji(kanji.id)"
+                                        *ngIf="dictionary.creator.login===currentAccount.login"
+                                        class="btn btn-primary btn-sm">
+                                    <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                                    <span class="d-none d-md-inline">Edit</span>
+                                </button>
+                                <button type="submit"
+                                        *ngIf="dictionary.creator.login===currentAccount.login"
+                                        [routerLink]="['/', 'dictionary', { outlets: { popup: dictionary.id+'/view/'+kanji.id + '/delete-kanji'} }]"
+                                        replaceUrl="false"
+                                        queryParamsHandling="merge"
+                                        class="btn btn-danger btn-sm">
+                                    <fa-icon [icon]="'times'"></fa-icon>
+                                    <span class="d-none d-md-inline">Delete</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 </div>

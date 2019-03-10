@@ -9,7 +9,7 @@ import { KanjiRecordService } from './kanji-record.service';
 import { KanjiRecordComponent } from './kanji-record.component';
 import { KanjiRecordDetailComponent } from './kanji-record-detail.component';
 import { KanjiRecordUpdateComponent } from './kanji-record-update.component';
-import { KanjiRecordDeletePopupComponent } from './kanji-record-delete-dialog.component';
+import { KanjiRecordDeletePopupComponent } from '../dictionary/kanji-record-delete-dialog.component';
 import { IKanjiRecord } from 'app/shared/model/kanji-record.model';
 
 @Injectable({ providedIn: 'root' })
@@ -73,21 +73,5 @@ export const kanjiRecordRoute: Routes = [
             pageTitle: 'KanjiRecords'
         },
         canActivate: [UserRouteAccessService]
-    }
-];
-
-export const kanjiRecordPopupRoute: Routes = [
-    {
-        path: ':id/delete',
-        component: KanjiRecordDeletePopupComponent,
-        resolve: {
-            kanjiRecord: KanjiRecordResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'KanjiRecords'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
     }
 ];

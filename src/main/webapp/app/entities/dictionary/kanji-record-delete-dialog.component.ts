@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IKanjiRecord } from 'app/shared/model/kanji-record.model';
-import { KanjiRecordService } from './kanji-record.service';
+import { KanjiRecordService } from 'app/entities/kanji-record';
 
 @Component({
     selector: 'jhi-kanji-record-delete-dialog',
@@ -52,13 +52,15 @@ export class KanjiRecordDeletePopupComponent implements OnInit, OnDestroy {
                     backdrop: 'static'
                 });
                 this.ngbModalRef.componentInstance.kanjiRecord = kanjiRecord;
+                let link = window.location.href;
+                let dictLink = link.substring(link.indexOf('(') + 1, link.lastIndexOf('//'));
                 this.ngbModalRef.result.then(
                     result => {
-                        this.router.navigate(['/kanji-record', { outlets: { popup: null } }]);
+                        window.location.href = link.substring(0, link.indexOf('(')) + dictLink;
                         this.ngbModalRef = null;
                     },
                     reason => {
-                        this.router.navigate(['/kanji-record', { outlets: { popup: null } }]);
+                        window.location.href = link.substring(0, link.indexOf('(')) + dictLink;
                         this.ngbModalRef = null;
                     }
                 );

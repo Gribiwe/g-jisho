@@ -6,7 +6,7 @@ import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { IKanjiRecord } from 'app/shared/model/kanji-record.model';
 import { KanjiRecordService } from './kanji-record.service';
-import { IUser, UserService } from 'app/core';
+import { AccountService, IUser, UserService } from 'app/core';
 import { IDictionary } from 'app/shared/model/dictionary.model';
 import { DictionaryService } from 'app/entities/dictionary';
 
@@ -17,17 +17,14 @@ import { DictionaryService } from 'app/entities/dictionary';
 export class KanjiRecordUpdateComponent implements OnInit {
     kanjiRecord: IKanjiRecord;
     isSaving: boolean;
-
     users: IUser[];
-
-    dictionaries: IDictionary[];
 
     constructor(
         protected jhiAlertService: JhiAlertService,
         protected kanjiRecordService: KanjiRecordService,
-        protected userService: UserService,
         protected dictionaryService: DictionaryService,
-        protected activatedRoute: ActivatedRoute
+        protected activatedRoute: ActivatedRoute,
+        protected accountService: AccountService
     ) {}
 
     ngOnInit() {
@@ -35,20 +32,12 @@ export class KanjiRecordUpdateComponent implements OnInit {
         this.activatedRoute.data.subscribe(({ kanjiRecord }) => {
             this.kanjiRecord = kanjiRecord;
         });
-        this.userService
-            .query()
-            .pipe(
-                filter((mayBeOk: HttpResponse<IUser[]>) => mayBeOk.ok),
-                map((response: HttpResponse<IUser[]>) => response.body)
-            )
-            .subscribe((res: IUser[]) => (this.users = res), (res: HttpErrorResponse) => this.onError(res.message));
-        this.dictionaryService
-            .query()
-            .pipe(
-                filter((mayBeOk: HttpResponse<IDictionary[]>) => mayBeOk.ok),
-                map((response: HttpResponse<IDictionary[]>) => response.body)
-            )
-            .subscribe((res: IDictionary[]) => (this.dictionaries = res), (res: HttpErrorResponse) => this.onError(res.message));
+        this.accountService.identity().then(account => {
+            this.kanjiRecord.creator = account;
+        });
+        this.activatedRoute.queryParams.subscribe(params => {
+            this.dictionaryService.find(params['dictionary']).subscribe(res => (this.kanjiRecord.dictionaries = [res.body]));
+        });
     }
 
     previousState() {
