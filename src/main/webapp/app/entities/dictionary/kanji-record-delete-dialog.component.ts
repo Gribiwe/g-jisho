@@ -57,10 +57,12 @@ export class KanjiRecordDeletePopupComponent implements OnInit, OnDestroy {
                 this.ngbModalRef.result.then(
                     result => {
                         window.location.href = link.substring(0, link.indexOf('(')) + dictLink;
+                        window.location.reload();
                         this.ngbModalRef = null;
                     },
                     reason => {
                         window.location.href = link.substring(0, link.indexOf('(')) + dictLink;
+                        window.location.reload();
                         this.ngbModalRef = null;
                     }
                 );

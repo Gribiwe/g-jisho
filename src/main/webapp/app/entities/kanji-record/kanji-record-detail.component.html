@@ -27,12 +27,12 @@
                 </dd>
                 <dt><span>Creator</span></dt>
                 <dd>
-                    {{kanjiRecord.creator?.id}}
+                    {{kanjiRecord.creator?.login}}
                 </dd>
-                <dt><span>Dictionary</span></dt>
+                <dt><span>Dictionaries</span></dt>
                 <dd>
                     <span *ngFor="let dictionary of kanjiRecord.dictionaries; let last = last">
-                        <a [routerLink]="['/dictionary', dictionary?.id, 'view' ]">{{dictionary.id}}</a>{{last ? '' : ', '}}
+                        <a class="text-primary" [routerLink]="['/dictionary', dictionary?.id, 'view' ]">{{dictionary.name}}</a>{{last ? '' : ', '}}
                     </span>
                 </dd>
             </dl>
@@ -43,7 +43,7 @@
                 <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
             </button>
 
-            <button type="button"
+            <button type="button" *ngIf="currentAccount.login === kanjiRecord.creator.login"
                     [routerLink]="['/kanji-record', kanjiRecord.id, 'edit']"
                     class="btn btn-primary">
                 <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>

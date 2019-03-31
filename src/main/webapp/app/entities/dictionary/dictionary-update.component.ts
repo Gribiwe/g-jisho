@@ -18,9 +18,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class DictionaryUpdateComponent implements OnInit {
     dictionary: IDictionary;
     isSaving: boolean;
+    isNameError: boolean;
 
     users: IUser[];
-
     kanjirecords: IKanjiRecord[];
 
     constructor(
@@ -29,7 +29,9 @@ export class DictionaryUpdateComponent implements OnInit {
         protected userService: UserService,
         protected kanjiRecordService: KanjiRecordService,
         protected activatedRoute: ActivatedRoute
-    ) {}
+    ) {
+        this.isNameError = false;
+    }
 
     ngOnInit() {
         this.isSaving = false;
@@ -57,11 +59,15 @@ export class DictionaryUpdateComponent implements OnInit {
     }
 
     save() {
-        this.isSaving = true;
-        if (this.dictionary.id !== undefined) {
-            this.subscribeToSaveResponse(this.dictionaryService.update(this.dictionary));
+        if (this.dictionary.name === '' || this.dictionary.name === undefined) {
+            this.isNameError = true;
         } else {
-            this.subscribeToSaveResponse(this.dictionaryService.create(this.dictionary));
+            this.isSaving = true;
+            if (this.dictionary.id !== undefined) {
+                this.subscribeToSaveResponse(this.dictionaryService.update(this.dictionary));
+            } else {
+                this.subscribeToSaveResponse(this.dictionaryService.create(this.dictionary));
+            }
         }
     }
 

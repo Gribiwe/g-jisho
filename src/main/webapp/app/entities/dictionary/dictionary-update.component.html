@@ -7,7 +7,9 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
-                        [(ngModel)]="dictionary.name" />
+                        [(ngModel)]="dictionary.name" (change)="isNameError=false"
+                           [ngClass]="{'is-invalid': isNameError || dictionary.name === '',
+                         'was-validated': !isNameError && dictionary.name !== ''}"/>
                 </div>
             </div>
             <div>

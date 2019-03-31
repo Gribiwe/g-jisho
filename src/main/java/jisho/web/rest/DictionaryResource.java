@@ -1,7 +1,9 @@
 package jisho.web.rest;
 import jisho.domain.Dictionary;
+import jisho.domain.KanjiRecord;
 import jisho.domain.User;
 import jisho.repository.DictionaryRepository;
+import jisho.repository.KanjiRecordRepository;
 import jisho.repository.UserRepository;
 import jisho.security.SecurityUtils;
 import jisho.web.rest.errors.BadRequestAlertException;
@@ -18,6 +20,8 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Dictionary.
@@ -32,11 +36,14 @@ public class DictionaryResource {
 
     private final DictionaryRepository dictionaryRepository;
 
+    private final KanjiRecordRepository kanjiRecordRepository;
+
     private final UserRepository userRepository;
 
-    public DictionaryResource(DictionaryRepository dictionaryRepository, UserRepository userRepository) {
+    public DictionaryResource(DictionaryRepository dictionaryRepository, UserRepository userRepository, KanjiRecordRepository kanjiRecordRepository) {
         this.dictionaryRepository = dictionaryRepository;
         this.userRepository = userRepository;
+        this.kanjiRecordRepository = kanjiRecordRepository;
     }
 
     /**
@@ -142,6 +149,17 @@ public class DictionaryResource {
 
         one.removeUser(user1);
         if (one.getUsers().size() == 0) {
+            Hibernate.initialize(one.getKanjiRecords());
+            Set<KanjiRecord> kanjiRecords = one.getKanjiRecords();
+            for (KanjiRecord kanjiRecord : kanjiRecords) {
+                Hibernate.initialize(kanjiRecord.getDictionaries());
+                kanjiRecord.setDictionaries(
+                    kanjiRecord.getDictionaries().
+                        stream().
+                        filter(dictionary -> !dictionary.getId().equals(id))
+                        .collect(Collectors.toSet()));
+                kanjiRecordRepository.save(kanjiRecord);
+            }
             dictionaryRepository.deleteById(id);
         } else {
             dictionaryRepository.save(one);

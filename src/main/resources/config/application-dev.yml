@@ -60,10 +60,15 @@ spring:
     liquibase:
         contexts: dev
     mail:
-        host: localhost
-        port: 25
-        username:
-        password:
+        host: smtp.gmail.com
+        port: 587
+        username: g.jisho.no.reply@gmail.com
+        password: ud2UDLbvXKzmvsS
+        protocol: smtp
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
     messages:
         cache-duration: PT1S # 1 second, see the ISO 8601 standard
     thymeleaf:
@@ -94,8 +99,8 @@ jhipster:
             # security key (this key should be unique for your application, and kept secret)
             key: 0afea83bfa15cb22d7506838c74571c58d83f8dc35b20634476e7090ea82d09b02124d68ccdacd11e4a7bfa689fedadbaba8
     mail: # specific JHipster mail property, for standard properties see MailProperties
-        from: gjisho@localhost
-        base-url: http://127.0.0.1:8080
+        from: g.jisho.no.reply@gmail.com
+        base-url: http://gjisho.gribiwe.pw:8080
     metrics:
         logs: # Reports metrics in the logs
             enabled: false

@@ -19,13 +19,19 @@ export class KanjiRecordUpdateComponent implements OnInit {
     isSaving: boolean;
     users: IUser[];
 
+    kanjiValueError: boolean;
+    kanjiMeaningError: boolean;
+
     constructor(
         protected jhiAlertService: JhiAlertService,
         protected kanjiRecordService: KanjiRecordService,
         protected dictionaryService: DictionaryService,
         protected activatedRoute: ActivatedRoute,
         protected accountService: AccountService
-    ) {}
+    ) {
+        this.kanjiValueError = false;
+        this.kanjiMeaningError = false;
+    }
 
     ngOnInit() {
         this.isSaving = false;
@@ -45,11 +51,24 @@ export class KanjiRecordUpdateComponent implements OnInit {
     }
 
     save() {
-        this.isSaving = true;
-        if (this.kanjiRecord.id !== undefined) {
-            this.subscribeToSaveResponse(this.kanjiRecordService.update(this.kanjiRecord));
+        console.log(this.kanjiRecord.value);
+        console.log(this.kanjiRecord.meaning);
+        if (this.kanjiRecord.value === '' || this.kanjiRecord.value === undefined) {
+            this.kanjiValueError = true;
+        }
+        if (this.kanjiRecord.meaning === '' || this.kanjiRecord.meaning === undefined) {
+            this.kanjiMeaningError = true;
+        }
+
+        if (this.kanjiMeaningError || this.kanjiValueError) {
+            return;
         } else {
-            this.subscribeToSaveResponse(this.kanjiRecordService.create(this.kanjiRecord));
+            this.isSaving = true;
+            if (this.kanjiRecord.id !== undefined) {
+                this.subscribeToSaveResponse(this.kanjiRecordService.update(this.kanjiRecord));
+            } else {
+                this.subscribeToSaveResponse(this.kanjiRecordService.create(this.kanjiRecord));
+            }
         }
     }
 

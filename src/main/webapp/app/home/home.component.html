@@ -34,14 +34,11 @@
                 <div routerLink="dictionary" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="menu-triada">
                     <span>Dictionaries</span>
                 </div>
-                <div class="menu-triada">
+                <div class="menu-triada" routerLink="kanji-record">
                 <span>Find Kanji</span>
 
                 </div>
             </div>
-
-
-
             <div *ngSwitchCase="false">
                 <button type="button" class="btn btn-primary" (click)="login()">Sign in</button> or
                 <button type="button" class="btn btn-primary" routerLink="register">Register</button>

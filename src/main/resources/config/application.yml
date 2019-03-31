@@ -120,7 +120,7 @@ jhipster:
         default-include-pattern: /api/.*
         title: gjisho API
         description: gjisho API documentation
-        version: 0.0.1
+        version: 0.9
         terms-of-service-url:
         contact-name:
         contact-url:
