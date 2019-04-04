@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { IKanjiRecord } from 'app/shared/model/kanji-record.model';
+import { IDictionary } from 'app/shared/model/dictionary.model';
 
 type EntityResponseType = HttpResponse<IKanjiRecord>;
 type EntityArrayResponseType = HttpResponse<IKanjiRecord[]>;
@@ -34,5 +35,9 @@ export class KanjiRecordService {
 
     delete(id: number): Observable<HttpResponse<any>> {
         return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    }
+
+    copy(kanhiRecord: number, dictionary: number): Observable<HttpResponse<IDictionary>> {
+        return this.http.get<IDictionary>(`${this.resourceUrl}/copy/${kanhiRecord}/${dictionary}`, { observe: 'response' });
     }
 }

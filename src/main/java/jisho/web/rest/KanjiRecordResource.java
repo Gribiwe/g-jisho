@@ -1,9 +1,12 @@
 package jisho.web.rest;
+import jisho.domain.Dictionary;
 import jisho.domain.KanjiRecord;
+import jisho.repository.DictionaryRepository;
 import jisho.repository.KanjiRecordRepository;
 import jisho.web.rest.errors.BadRequestAlertException;
 import jisho.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +30,11 @@ public class KanjiRecordResource {
     private static final String ENTITY_NAME = "kanjiRecord";
 
     private final KanjiRecordRepository kanjiRecordRepository;
+    private final DictionaryRepository dictionaryRepository;
 
-    public KanjiRecordResource(KanjiRecordRepository kanjiRecordRepository) {
+    public KanjiRecordResource(KanjiRecordRepository kanjiRecordRepository, DictionaryRepository dictionaryRepository) {
         this.kanjiRecordRepository = kanjiRecordRepository;
+        this.dictionaryRepository = dictionaryRepository;
     }
 
     /**
@@ -108,5 +113,33 @@ public class KanjiRecordResource {
         log.debug("REST request to delete KanjiRecord : {}", id);
         kanjiRecordRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+    @GetMapping("/kanji-records/copy/{kanjiId}/{dictionaryId}")
+    public ResponseEntity<Dictionary> copyKanji(@PathVariable Long kanjiId, @PathVariable Long dictionaryId) {
+        log.debug("REST request to get all KanjiRecords");
+        Dictionary dictionary = dictionaryRepository.findById(dictionaryId).get();
+        KanjiRecord kanjiRecord = kanjiRecordRepository.findById(kanjiId).get();
+
+        Hibernate.initialize(dictionary.getKanjiRecords());
+        Hibernate.initialize(kanjiRecord.getDictionaries());
+
+        if ( dictionary.getKanjiRecords().contains(kanjiRecord) || kanjiRecord.getDictionaries().contains(dictionary)) {
+            return ResponseEntity.badRequest()
+                .headers(HeaderUtil.createFailureAlert(
+                    ENTITY_NAME,
+                    kanjiRecord.getId().toString(),
+                    "This canji record is already in dictionary "+dictionary.getName()
+                )).build();
+        }
+
+        dictionary.getKanjiRecords().add(kanjiRecord);
+        kanjiRecord.getDictionaries().add(dictionary);
+
+        dictionary = dictionaryRepository.save(dictionary);
+        kanjiRecordRepository.save(kanjiRecord);
+
+        return ResponseEntity.ok()
+            .body(dictionary);
     }
 }

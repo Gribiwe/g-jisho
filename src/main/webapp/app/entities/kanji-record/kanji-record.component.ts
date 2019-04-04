@@ -7,6 +7,8 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { IKanjiRecord } from 'app/shared/model/kanji-record.model';
 import { AccountService } from 'app/core';
 import { KanjiRecordService } from './kanji-record.service';
+import { DictionaryService } from 'app/entities/dictionary';
+import { Dictionary, IDictionary } from 'app/shared/model/dictionary.model';
 
 @Component({
     selector: 'jhi-kanji-record',
@@ -16,12 +18,15 @@ export class KanjiRecordComponent implements OnInit, OnDestroy {
     kanjiRecords: IKanjiRecord[];
     currentAccount: any;
     eventSubscriber: Subscription;
+    myDictionaries: IDictionary[];
+    seelctedDictionary: IDictionary;
 
     constructor(
         protected kanjiRecordService: KanjiRecordService,
         protected jhiAlertService: JhiAlertService,
         protected eventManager: JhiEventManager,
-        protected accountService: AccountService
+        protected accountService: AccountService,
+        protected dictionaryService: DictionaryService
     ) {}
 
     loadAll() {
@@ -45,6 +50,21 @@ export class KanjiRecordComponent implements OnInit, OnDestroy {
             this.currentAccount = account;
         });
         this.registerChangeInKanjiRecords();
+        this.dictionaryService
+            .getMy()
+            .pipe(
+                filter((res: HttpResponse<IDictionary[]>) => res.ok),
+                map((res: HttpResponse<IDictionary[]>) => res.body)
+            )
+            .subscribe(
+                (res: IDictionary[]) => {
+                    this.myDictionaries = res;
+                    this.seelctedDictionary = this.myDictionaries[0];
+                },
+                (res: HttpErrorResponse) => {
+                    this.onError(res.message);
+                }
+            );
     }
 
     ngOnDestroy() {
@@ -57,6 +77,33 @@ export class KanjiRecordComponent implements OnInit, OnDestroy {
 
     registerChangeInKanjiRecords() {
         this.eventSubscriber = this.eventManager.subscribe('kanjiRecordListModification', response => this.loadAll());
+    }
+
+    selectedDictionaryContainsKanji(kanji: number) {
+        let result = false;
+        this.seelctedDictionary.kanjiRecords.forEach(kanjiIn => {
+            if (kanjiIn.id === kanji) {
+                result = true;
+                return;
+            }
+        });
+        return result;
+    }
+
+    copy(kanjiRecord: IKanjiRecord) {
+        this.kanjiRecordService.copy(kanjiRecord.id, this.seelctedDictionary.id).subscribe(
+            responce => {
+                this.seelctedDictionary.kanjiRecords = responce.body.kanjiRecords;
+                this.jhiAlertService.info('Copied kanji ' + kanjiRecord.value + ' to the dictionary ' + this.seelctedDictionary.name);
+            },
+            (res: HttpErrorResponse) => {
+                if (res.status === 400) {
+                    this.onError('This kanji record is already in dictionary ' + this.seelctedDictionary.name);
+                } else {
+                    this.onError(res.message);
+                }
+            }
+        );
     }
 
     protected onError(errorMessage: string) {
